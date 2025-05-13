@@ -49,26 +49,21 @@ class FeedbackLoop:
             Dict: Result of the feedback submission
         """
         try:
-            # Get database session
+            # Get database
             db = get_db()
             
             # Check if interaction exists
-            interaction = db.query(Interaction).filter(Interaction.id == interaction_id).first()
+            interaction = Interaction.get_by_id(interaction_id)
             if not interaction:
                 logger.warning(f"Tried to submit feedback for non-existent interaction: {interaction_id}")
                 return {"success": False, "message": "Interaction not found"}
             
             # Create feedback record
-            feedback = Feedback(
-                id=str(uuid.uuid4()),
+            feedback_id = Feedback.create(
                 interaction_id=interaction_id,
                 feedback_type=feedback_type,
                 notes=notes
             )
-            
-            # Add to database
-            db.add(feedback)
-            db.commit()
             
             # Also log feedback to file
             self._log_feedback_to_file(
@@ -76,14 +71,14 @@ class FeedbackLoop:
                 feedback_type=feedback_type,
                 notes=notes,
                 interaction_data={
-                    "question": interaction.question,
-                    "solution": interaction.generated_solution,
-                    "source": interaction.source
+                    "question": interaction["question"],
+                    "solution": interaction["generated_solution"],
+                    "source": interaction["source"]
                 }
             )
             
             logger.info(f"Feedback submitted for interaction {interaction_id}: {feedback_type}")
-            return {"success": True, "feedback_id": feedback.id}
+            return {"success": True, "feedback_id": feedback_id}
             
         except Exception as e:
             logger.error(f"Error submitting feedback: {str(e)}")
@@ -156,20 +151,21 @@ class FeedbackLoop:
             List[Dict]: Recent feedback items
         """
         try:
-            # Get database session
+            # Get database
             db = get_db()
             
-            # Query recent feedback
-            feedback_items = db.query(Feedback).order_by(Feedback.timestamp.desc()).limit(limit).all()
+            # Query recent feedback using MongoDB
+            feedback_collection = db.feedback
+            feedback_items = list(feedback_collection.find().sort("timestamp", -1).limit(limit))
             
             # Convert to list of dictionaries
             result = []
             for item in feedback_items:
                 # Get associated interaction
-                interaction = db.query(Interaction).filter(Interaction.id == item.interaction_id).first()
+                interaction = Interaction.get_by_id(item["interaction_id"])
                 
-                feedback_dict = item.to_dict()
-                feedback_dict["interaction"] = interaction.to_dict() if interaction else {}
+                feedback_dict = Feedback.to_dict(item)
+                feedback_dict["interaction"] = Interaction.to_dict(interaction) if interaction else {}
                 
                 result.append(feedback_dict)
             
@@ -187,20 +183,25 @@ class FeedbackLoop:
             Dict: Analysis results
         """
         try:
-            # Get database session
+            # Get database
             db = get_db()
+            feedback_collection = db.feedback
+            interactions_collection = db.interactions
             
             # Get feedback counts by type
             feedback_counts = {}
             for feedback_type in ["helpful", "needs_improvement", "incorrect", "detailed"]:
-                count = db.query(Feedback).filter(Feedback.feedback_type == feedback_type).count()
+                count = feedback_collection.count_documents({"feedback_type": feedback_type})
                 feedback_counts[feedback_type] = count
             
             # Get source distribution
             source_counts = {}
-            source_query = db.query(Interaction.source, db.func.count()).group_by(Interaction.source).all()
-            for source, count in source_query:
-                source_counts[source] = count
+            source_pipeline = [
+                {"$group": {"_id": "$source", "count": {"$sum": 1}}}
+            ]
+            source_results = list(interactions_collection.aggregate(source_pipeline))
+            for result in source_results:
+                source_counts[result["_id"]] = result["count"]
             
             # Calculate success rate (% of helpful feedback)
             total_feedback = sum(feedback_counts.values())
@@ -211,7 +212,7 @@ class FeedbackLoop:
                 "feedback_counts": feedback_counts,
                 "source_distribution": source_counts,
                 "success_rate": success_rate,
-                "total_interactions": db.query(Interaction).count(),
+                "total_interactions": interactions_collection.count_documents({}),
                 "total_feedback": total_feedback
             }
             

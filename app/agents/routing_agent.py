@@ -207,12 +207,8 @@ class RoutingAgent:
             context_used: Context used for generation
         """
         try:
-            # Get database session
-            db = get_db()
-            
-            # Create new interaction record
-            interaction = Interaction(
-                id=interaction_id,
+            # Use the Interaction class to create a new record
+            Interaction.create(
                 question=question,
                 generated_solution=solution,
                 source=source,
@@ -222,10 +218,6 @@ class RoutingAgent:
                 context_used=context_used,
                 llm_model=self.generation_agent.model_name if self.generation_agent else None
             )
-            
-            # Add to database
-            db.add(interaction)
-            db.commit()
             
             logger.info(f"Stored interaction {interaction_id} in database")
             
