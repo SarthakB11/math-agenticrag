@@ -27,7 +27,7 @@ The system uses an Agentic RAG architecture with the following components:
 - **Backend**: Python with LangGraph/LangChain
 - **Frontend**: Streamlit
 - **Vector Database**: Qdrant
-- **LLM**: OpenAI (GPT-4)
+- **LLM**: Google AI (Gemini-Pro)
 - **Search API**: Tavily/Serper
 - **Embedding**: Sentence Transformers
 - **HITL Framework**: DSPy-ai
@@ -144,5 +144,5 @@ This project is licensed under the MIT License.
 
 - Built using LangChain and LangGraph frameworks
 - Uses Qdrant for vector storage
-- Powered by OpenAI's models
+- Powered by Google AI's Gemini models
 

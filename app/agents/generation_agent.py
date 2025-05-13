@@ -4,7 +4,7 @@ Generation Agent for the Math Agent system
 import logging
 import os
 from typing import List, Dict, Any, Optional, Union
-from langchain_openai import ChatOpenAI, OpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain import PromptTemplate, LLMChain
 from langchain.schema import HumanMessage, SystemMessage
 from dotenv import load_dotenv
@@ -23,13 +23,13 @@ class GenerationAgent:
     simplified mathematical solution.
     """
     
-    def __init__(self, api_key: Optional[str] = None, model_name: str = "gpt-4"):
+    def __init__(self, api_key: Optional[str] = None, model_name: str = "gemini-pro"):
         """
         Initialize the Generation Agent
         
         Args:
             api_key: API key for the LLM (default: from env)
-            model_name: The model to use (default: gpt-4)
+            model_name: The model to use (default: gemini-pro)
         """
         self.api_key = api_key or os.getenv("LLM_API_KEY", "")
         self.model_name = model_name
@@ -40,9 +40,9 @@ class GenerationAgent:
         else:
             try:
                 # Initialize the LLM
-                self.llm = ChatOpenAI(
+                self.llm = ChatGoogleGenerativeAI(
                     api_key=self.api_key,
-                    model_name=self.model_name,
+                    model=self.model_name,
                     temperature=0.2  # Lower temperature for more deterministic, factual responses
                 )
                 logger.info(f"LLM initialized with model: {model_name}")

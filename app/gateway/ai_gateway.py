@@ -4,7 +4,7 @@ AI Gateway for input and output validation
 import re
 import logging
 from typing import List, Set, Dict, Any, Optional
-from langchain_openai import OpenAI
+from langchain_google_genai import GoogleGenerativeAI
 import os
 from dotenv import load_dotenv
 
@@ -54,11 +54,11 @@ class AIGateway:
         self.llm = None
         if os.getenv("LLM_API_KEY"):
             try:
-                self.llm = OpenAI(
+                self.llm = GoogleGenerativeAI(
                     api_key=os.getenv("LLM_API_KEY"),
-                    model_name="gpt-3.5-turbo-instruct",
+                    model="gemini-pro",
                     temperature=0.0,
-                    max_tokens=100
+                    max_output_tokens=100
                 )
             except Exception as e:
                 logger.warning(f"Failed to initialize LLM for gateway: {str(e)}")
