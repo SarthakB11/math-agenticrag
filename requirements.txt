@@ -1,0 +1,40 @@
+# Core
+fastapi==0.103.1
+uvicorn==0.23.2
+pydantic==2.3.0
+python-dotenv==1.0.0
+
+# Database
+sqlalchemy==2.0.20
+psycopg2-binary==2.9.7
+alembic==1.12.0
+
+# Vector Database
+qdrant-client==1.5.1
+
+# Agent Framework
+langchain==0.0.267
+langchain-core==0.0.17
+langchain-openai==0.0.8
+langgraph>=0.0.17
+
+# LLM
+openai==1.3.3
+
+# Embedding
+sentence-transformers==2.2.2
+
+# Web Search and Extraction
+tavily-python==0.2.2
+beautifulsoup4==4.12.2
+trafilatura==1.6.1
+requests==2.31.0
+
+# Feedback/HITL
+dspy-ai==2.2.0
+
+# Testing
+pytest==7.4.0
+
+# UI (streamlit)
+streamlit==1.28.0 
