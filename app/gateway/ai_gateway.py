@@ -56,7 +56,7 @@ class AIGateway:
             try:
                 self.llm = GoogleGenerativeAI(
                     api_key=os.getenv("LLM_API_KEY"),
-                    model="gemini-pro",
+                    model="gemini-2.0-flash",
                     temperature=0.0,
                     max_output_tokens=100
                 )

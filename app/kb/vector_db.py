@@ -40,7 +40,7 @@ class VectorDB:
         # Initialize embedding model
         try:
             # Using sentence-transformers for generating embeddings
-            self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+            self.embedding_model = SentenceTransformer('all-MiniLM-L12-v2')
             self.vector_size = self.embedding_model.get_sentence_embedding_dimension()
             logger.info(f"Initialized embedding model with dimension: {self.vector_size}")
         except Exception as e:

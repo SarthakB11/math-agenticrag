@@ -5,8 +5,9 @@ import logging
 import os
 from typing import List, Dict, Any, Optional, Union
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain import PromptTemplate, LLMChain
-from langchain.schema import HumanMessage, SystemMessage
+from langchain_core.prompts import PromptTemplate
+from langchain.chains import LLMChain
+from langchain_core.messages import HumanMessage, SystemMessage
 from dotenv import load_dotenv
 
 # Configure logging
@@ -23,13 +24,13 @@ class GenerationAgent:
     simplified mathematical solution.
     """
     
-    def __init__(self, api_key: Optional[str] = None, model_name: str = "gemini-pro"):
+    def __init__(self, api_key: Optional[str] = None, model_name: str = "gemini-2.0-flash"):
         """
         Initialize the Generation Agent
         
         Args:
             api_key: API key for the LLM (default: from env)
-            model_name: The model to use (default: gemini-pro)
+            model_name: The model to use (default: gemini-2.0-flash)
         """
         self.api_key = api_key or os.getenv("LLM_API_KEY", "")
         self.model_name = model_name
