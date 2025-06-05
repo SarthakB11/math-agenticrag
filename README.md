@@ -44,8 +44,8 @@ The system uses an Agentic RAG architecture with the following components:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/math-agenticrag.git
-   cd math-agenticrag
+   git clone https://github.com/your-username/maths-homework-helper.git
+   cd maths-homework-helper
    ```
 
 2. Set up a Python virtual environment:
@@ -91,7 +91,7 @@ streamlit run app.py
 ## 📁 Project Structure
 
 ```
-math-agenticrag/
+maths-homework-helper/
 ├── app/                  # Core application code
 │   ├── agents/           # Agent definitions and logic
 │   │   ├── generation_agent.py  # LLM-based solution generation
