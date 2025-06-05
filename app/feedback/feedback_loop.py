@@ -2,20 +2,18 @@
 Feedback Loop module for Human-in-the-Loop learning
 """
 import logging
-import os
 from typing import List, Dict, Any, Optional, Tuple
 from app.models.database import get_db, Feedback, Interaction
-from dotenv import load_dotenv
+from app.config import CONFIG
 import json
 import datetime
 import uuid
+import os
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load environment variables
-load_dotenv()
 
 class FeedbackLoop:
     """

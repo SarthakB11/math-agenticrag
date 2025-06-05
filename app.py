@@ -2,52 +2,48 @@
 Math Agent with Human-in-the-Loop Feedback
 Main application entry point
 """
-import os
 import streamlit as st
-from dotenv import load_dotenv
 from app.agents.routing_agent import RoutingAgent
 from app.agents.generation_agent import GenerationAgent
 from app.kb.vector_db import VectorDB
 from app.web_search.search_agent import WebSearchAgent
 from app.gateway.ai_gateway import AIGateway
 from app.feedback.feedback_loop import FeedbackLoop
-
-# Load environment variables
-load_dotenv()
+from app.config import CONFIG
 
 # Initialize components
 def init_components():
     """Initialize all components of the Math Agent system"""
     # Initialize Vector DB connection
     vector_db = VectorDB(
-        url=os.getenv("VECTOR_DB_URL", "localhost"),
-        port=int(os.getenv("VECTOR_DB_PORT", "6333")),
-        collection_name=os.getenv("VECTOR_DB_COLLECTION", "math_knowledge_base")
+        url=CONFIG["vector_db"]["url"],
+        port=int(CONFIG["vector_db"].get("port", 6333)),
+        collection_name=CONFIG["vector_db"].get("collection", "math_knowledge_base")
     )
-    
+
     # Initialize AI Gateway
     ai_gateway = AIGateway()
-    
+
     # Initialize Web Search Agent
     web_search_agent = WebSearchAgent(
-        api_key=os.getenv("SEARCH_API_KEY", "")
+        api_key=CONFIG["search"]["api_key"]
     )
-    
+
     # Initialize Generation Agent
     generation_agent = GenerationAgent(
-        api_key=os.getenv("LLM_API_KEY", "")
+        api_key=CONFIG["llm"]["api_key"]
     )
-    
+
     # Initialize Routing Agent
     routing_agent = RoutingAgent(
         vector_db=vector_db,
         web_search_agent=web_search_agent,
         generation_agent=generation_agent
     )
-    
+
     # Initialize Feedback Loop
     feedback_loop = FeedbackLoop()
-    
+
     return {
         "ai_gateway": ai_gateway,
         "routing_agent": routing_agent,

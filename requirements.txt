@@ -37,3 +37,6 @@ pytest
 
 # UI (streamlit)
 streamlit 
+
+#toml
+tomli

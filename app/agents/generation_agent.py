@@ -2,20 +2,17 @@
 Generation Agent for the Math Agent system
 """
 import logging
-import os
 from typing import List, Dict, Any, Optional, Union
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain_core.messages import HumanMessage, SystemMessage
-from dotenv import load_dotenv
+from app.config import CONFIG
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load environment variables
-load_dotenv()
 
 class GenerationAgent:
     """
@@ -32,9 +29,9 @@ class GenerationAgent:
             api_key: API key for the LLM (default: from env)
             model_name: The model to use (default: gemini-2.0-flash)
         """
-        self.api_key = api_key or os.getenv("LLM_API_KEY", "")
+        self.api_key = api_key or CONFIG["llm"]["api_key"]
         self.model_name = model_name
-        
+
         if not self.api_key:
             logger.warning("No LLM API key provided, generation will not function")
             self.llm = None

@@ -5,15 +5,12 @@ import re
 import logging
 from typing import List, Set, Dict, Any, Optional
 from langchain_google_genai import GoogleGenerativeAI
-import os
-from dotenv import load_dotenv
+from app.config import CONFIG
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load environment variables
-load_dotenv()
 
 class AIGateway:
     """
@@ -52,10 +49,11 @@ class AIGateway:
         # Initialize LLM for advanced classification if needed
         # (Lightweight models should be used here to minimize latency and costs)
         self.llm = None
-        if os.getenv("LLM_API_KEY"):
+        api_key = CONFIG["llm"].get("api_key")
+        if api_key:
             try:
                 self.llm = GoogleGenerativeAI(
-                    api_key=os.getenv("LLM_API_KEY"),
+                    api_key=api_key,
                     model="gemini-2.0-flash",
                     temperature=0.0,
                     max_output_tokens=100

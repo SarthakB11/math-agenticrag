@@ -3,20 +3,17 @@ Vector Database module for the Math Agent
 """
 import logging
 from typing import List, Dict, Any, Optional, Tuple
-import os
 import numpy as np
 from qdrant_client import QdrantClient
 from qdrant_client.http import models
 from qdrant_client.http.exceptions import UnexpectedResponse
 from sentence_transformers import SentenceTransformer
-from dotenv import load_dotenv
+from app.config import CONFIG
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load environment variables
-load_dotenv()
 
 class VectorDB:
     """
@@ -49,7 +46,7 @@ class VectorDB:
         
         # Initialize Qdrant client (support Qdrant Cloud api_key)
         try:
-            api_key = os.getenv("VECTOR_DB_API_KEY")
+            api_key = CONFIG["vector_db"].get("api_key")
             # If using a cloud URL (https), do not pass port
             if api_key:
                 self.client = QdrantClient(url=url, api_key=api_key)

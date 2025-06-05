@@ -12,10 +12,7 @@ import glob
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from app.kb.vector_db import VectorDB
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
+from app.config import CONFIG
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -26,9 +23,9 @@ def main():
     try:
         # Initialize VectorDB
         vector_db = VectorDB(
-            url=os.getenv("VECTOR_DB_URL", "localhost"),
-            port=int(os.getenv("VECTOR_DB_PORT", "6333")),
-            collection_name=os.getenv("VECTOR_DB_COLLECTION", "math_knowledge_base")
+            url=CONFIG["vector_db"]["url"],
+            port=int(CONFIG["vector_db"].get("port", 6333)),
+            collection_name=CONFIG["vector_db"].get("collection", "math_knowledge_base")
         )
         
         # Load real dataset from dataset.json

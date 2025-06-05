@@ -4,19 +4,13 @@ Database models for the Math Agent system
 import uuid
 from datetime import datetime
 from typing import Optional, Any, Dict, List
-import os
-from dotenv import load_dotenv
+from app.config import CONFIG
 from pymongo import MongoClient
 from pymongo.database import Database
 from pymongo.collection import Collection
 
-# Load environment variables
-load_dotenv()
+DB_CONNECTION_STRING = CONFIG["database"].get("connection_string", "mongodb://localhost:27017/math_agent")
 
-# Get database connection string
-DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING", "mongodb://localhost:27017/math_agent")
-
-# Create MongoDB client
 client = MongoClient(DB_CONNECTION_STRING)
 db = client.get_database("math_agent")
 

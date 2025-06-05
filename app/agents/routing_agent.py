@@ -4,19 +4,16 @@ Routing Agent for the Math Agent system
 import logging
 import uuid
 from typing import List, Dict, Any, Optional, Tuple
-import os
 from app.kb.vector_db import VectorDB
 from app.web_search.search_agent import WebSearchAgent
 from app.agents.generation_agent import GenerationAgent
 from app.models.database import get_db, Interaction
-from dotenv import load_dotenv
+from app.config import CONFIG
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load environment variables
-load_dotenv()
 
 class RoutingAgent:
     """

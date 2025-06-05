@@ -1,0 +1,18 @@
+[llm]
+api_key = "YOUR_LLM_API_KEY"
+
+[vector_db]
+url = "https://your-qdrant-url"
+api_key = "YOUR_QDRANT_API_KEY"
+port = 6333
+collection = "math_knowledge_base"
+
+[search]
+api_key = "YOUR_SEARCH_API_KEY"
+
+[database]
+connection_string = "mongodb+srv://username:password@cluster0.example.mongodb.net/?retryWrites=true&w=majority&appName=YourAppName"
+
+[app]
+debug = true
+log_level = "INFO"

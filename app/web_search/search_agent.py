@@ -4,19 +4,16 @@ Web Search Agent and Content Extraction
 import logging
 import requests
 from typing import List, Dict, Any, Optional
-import os
 import re
 import json
 from bs4 import BeautifulSoup
 import trafilatura
-from dotenv import load_dotenv
+from app.config import CONFIG
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load environment variables
-load_dotenv()
 
 class WebSearchAgent:
     """
@@ -30,7 +27,7 @@ class WebSearchAgent:
         Args:
             api_key: API key for the search API (default: from env)
         """
-        self.api_key = api_key or os.getenv("SEARCH_API_KEY", "")
+        self.api_key = api_key or CONFIG["search"]["api_key"]
         if not self.api_key:
             logger.warning("No search API key provided, web search will not function")
         
