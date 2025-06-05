@@ -88,8 +88,6 @@ Start the Streamlit app:
 streamlit run app.py
 ```
 
-Visit the app at http://localhost:8501
-
 ## 📁 Project Structure
 
 ```
