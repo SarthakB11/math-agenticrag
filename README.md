@@ -3,7 +3,9 @@
 A virtual math professor that provides step-by-step solutions to mathematical problems using an Agentic RAG (Retrieval-Augmented Generation) architecture, with human feedback for continuous improvement.
 
 ---
+Deployed Agent at https://bcwti9cmjtjgovljrdxxer.streamlit.app/
 
+Documentation at https://sarthakb11.github.io/math-homework-helper/
 ## 🚀 Features
 
 - **AI Gateway with Guardrails:** Ensures all interactions are focused on mathematics, maintaining safety and privacy.
