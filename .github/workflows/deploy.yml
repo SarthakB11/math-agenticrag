@@ -61,6 +61,7 @@ jobs:
           SEARCH_API_KEY: ${{ secrets.SEARCH_API_KEY }}
           DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
           VECTOR_DB_URL: ${{ secrets.VECTOR_DB_URL }}
+          VECTOR_DB_API_KEY: ${{ secrets.VECTOR_DB_API_KEY }}
           VECTOR_DB_PORT: ${{ secrets.VECTOR_DB_PORT }}
           VECTOR_DB_COLLECTION: ${{ secrets.VECTOR_DB_COLLECTION }}
           DEBUG: ${{ secrets.DEBUG }}
