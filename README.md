@@ -125,6 +125,8 @@ A ready-to-use GitHub Actions workflow is provided at `.github/workflows/deploy.
 - Start Qdrant in Docker
 - Run your Streamlit app
 
+To use Qdrant Cloud, set VECTOR_DB_URL and VECTOR_DB_API_KEY in your .env or as GitHub Actions secrets.
+
 ### Required Secrets
 
 Set these secrets in your GitHub repository (Settings → Secrets and variables → Actions):
