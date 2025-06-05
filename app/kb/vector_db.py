@@ -23,7 +23,7 @@ class VectorDB:
     Vector Database connector to handle knowledge base operations
     """
     
-    def __init__(self, url: str = "localhost", port: int = 6333, 
+    def __init__(self, url: str = "localhost", port: Optional[int] = 6333, 
                  collection_name: str = "math_knowledge_base"):
         """
         Initialize the Vector Database connection
@@ -47,11 +47,17 @@ class VectorDB:
             logger.error(f"Failed to initialize embedding model: {str(e)}")
             raise
         
-        # Initialize Qdrant client
+        # Initialize Qdrant client (support Qdrant Cloud api_key)
         try:
-            self.client = QdrantClient(url=url, port=port)
-            logger.info(f"Connected to Qdrant at {url}:{port}")
-            
+            api_key = os.getenv("VECTOR_DB_API_KEY")
+            # If using a cloud URL (https), do not pass port
+            if api_key:
+                self.client = QdrantClient(url=url, api_key=api_key)
+                logger.info(f"Connected to Qdrant Cloud at {url}")
+            else:
+                self.client = QdrantClient(url=url, port=port)
+                logger.info(f"Connected to Qdrant at {url}:{port}")
+
             # Check if collection exists, create if not
             try:
                 self.client.get_collection(collection_name)
