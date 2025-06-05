@@ -1,0 +1,70 @@
+name: Deploy Streamlit App with Qdrant
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      # You can add more env vars here, or load from secrets below
+      QDRANT_HOST: localhost
+      QDRANT_PORT: 6333
+      # Example: STREAMLIT_SERVER_PORT: 8501
+      # Example: APP_ENV: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Set up virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+
+      - name: Install dependencies
+        run: |
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Start Qdrant (Docker)
+        run: |
+          docker run -d --name qdrant -p 6333:6333 qdrant/qdrant
+
+      - name: Wait for Qdrant to be healthy
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost:6333/collections | grep -q 'collections'; then
+              echo "Qdrant is up!"; break
+            fi
+            echo "Waiting for Qdrant..."; sleep 2
+          done
+
+      - name: Copy .env if present
+        run: |
+          if [ -f .env ]; then cp .env .env.deploy; fi
+        shell: bash
+
+      - name: Run Streamlit app
+        env:
+          # Load secrets as env vars here
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          SEARCH_API_KEY: ${{ secrets.SEARCH_API_KEY }}
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+          VECTOR_DB_URL: ${{ secrets.VECTOR_DB_URL }}
+          VECTOR_DB_PORT: ${{ secrets.VECTOR_DB_PORT }}
+          VECTOR_DB_COLLECTION: ${{ secrets.VECTOR_DB_COLLECTION }}
+          DEBUG: ${{ secrets.DEBUG }}
+          LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
+        run: |
+          source venv/bin/activate
+          streamlit run app.py --server.headless true
