@@ -1,91 +1,167 @@
 # Math Agent with Human-in-the-Loop Feedback
 
-A virtual math professor that provides step-by-step solutions to mathematical problems using an Agentic RAG architecture with human feedback for continuous improvement.
+A virtual math professor that provides step-by-step solutions to mathematical problems using an Agentic RAG (Retrieval-Augmented Generation) architecture, with human feedback for continuous improvement.
+
+---
 
 ## 🚀 Features
 
-- **AI Gateway with Guardrails**: Ensures all interactions are focused on mathematics and maintains safety and privacy
-- **Knowledge Base Integration**: Uses a Vector Database to store and retrieve mathematical knowledge
-- **Web Search Capability**: Falls back to web search when the Knowledge Base lacks information
-- **Step-by-Step Solution Generation**: Provides clear, easy-to-understand solution steps
-- **Human-in-the-Loop Feedback**: Learns from user feedback to improve future responses
-- **Interactive Web Interface**: Simple, user-friendly interface using Streamlit
+- **AI Gateway with Guardrails:** Ensures all interactions are focused on mathematics, maintaining safety and privacy.
+- **Knowledge Base Integration:** Uses a vector database (Qdrant) to store and retrieve mathematical knowledge.
+- **Web Search Capability:** Falls back to web search when the knowledge base lacks information.
+- **Step-by-Step Solution Generation:** Provides clear, easy-to-understand solution steps.
+- **Human-in-the-Loop Feedback:** Learns from user feedback to improve future responses.
+- **Interactive Web Interface:** Simple, user-friendly interface using Streamlit.
+
+---
+
+## 🧰 Tech Stack
+
+- **Backend:** Python (LangGraph, LangChain)
+- **Frontend:** Streamlit
+- **Vector Database:** Qdrant
+- **LLM:** Google AI (Gemini-Pro)
+- **Search API:** Tavily/Serper
+- **Embedding:** Sentence Transformers
+- **HITL Framework:** DSPy-ai
+- **Other:** FastAPI, MongoDB (via pymongo), dotenv
+
+---
 
 ## 🛠️ Architecture
 
 The system uses an Agentic RAG architecture with the following components:
 
-1. **AI Gateway**: Acts as the system's entry and exit point, enforcing guardrails
-2. **Routing Agent**: Directs queries to either the Knowledge Base or Web Search
-3. **Knowledge Base**: Vector Database storing math knowledge
-4. **Web Search Agent**: Performs targeted web searches and extracts content
-5. **Generation Agent**: Synthesizes information into step-by-step solutions
-6. **Human Feedback Loop**: Collects and integrates user feedback
+1. **AI Gateway:** Entry/exit point, enforcing guardrails.
+2. **Routing Agent:** Directs queries to either the knowledge base or web search.
+3. **Knowledge Base:** Vector database (Qdrant) storing math knowledge.
+4. **Web Search Agent:** Performs targeted web searches and extracts content.
+5. **Generation Agent:** Synthesizes information into step-by-step solutions.
+6. **Human Feedback Loop:** Collects and integrates user feedback.
 
-## 🧰 Tech Stack
+---
 
-- **Backend**: Python with LangGraph/LangChain
-- **Frontend**: Streamlit
-- **Vector Database**: Qdrant
-- **LLM**: Google AI (Gemini-Pro)
-- **Search API**: Tavily/Serper
-- **Embedding**: Sentence Transformers
-- **HITL Framework**: DSPy-ai
+## 📁 Project Structure
 
-## 🔧 Installation
+```
+math-agenticrag/
+├── app.py                  # Main Streamlit app entry point
+├── requirements.txt        # Python dependencies
+├── env.sample              # Example environment variables
+├── .env                    # (Not committed) Your actual environment variables
+├── app/                    # Core application modules (agents, kb, feedback, etc.)
+├── scripts/
+│   ├── init_db.py          # Script to initialize the vector DB
+│   └── load_knowledge_base.py # Script to load sample data
+├── .github/workflows/
+│   └── deploy.yml          # GitHub Actions workflow for deployment
+└── ...
+```
+
+---
+
+## 🔧 Installation & Local Development
 
 ### Prerequisites
 
 - Python 3.8+
-- pip (Python package manager)
-- Docker (optional, for Qdrant)
+- pip
+- Docker (for Qdrant)
+- Git
 
 ### Setup
 
-1. Clone the repository:
+1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/maths-homework-helper.git
-   cd maths-homework-helper
+   git clone https://github.com/your-username/math-agenticrag.git
+   cd math-agenticrag
    ```
 
-2. Set up a Python virtual environment:
+2. **Set up a Python virtual environment:**
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. Install dependencies:
+3. **Install dependencies:**
    ```bash
+   pip install --upgrade pip
    pip install -r requirements.txt
    ```
 
-4. Set up environment variables by copying the sample file:
+4. **Configure environment variables:**
    ```bash
    cp env.sample .env
    ```
-   Then edit the `.env` file with your API keys and configuration.
+   Edit `.env` with your API keys and configuration.
 
-5. Start Qdrant (Vector Database) using Docker:
+5. **Start Qdrant (Vector Database) using Docker:**
    ```bash
    docker run -p 6333:6333 -p 6334:6334 qdrant/qdrant
    ```
 
-6. Initialize the database:
+6. **Initialize the database:**
    ```bash
    python scripts/init_db.py
    ```
 
-7. Load sample data into the knowledge base:
+7. **Load sample data into the knowledge base:**
    ```bash
    python scripts/load_knowledge_base.py
    ```
 
-## 🚀 Running the Application
+8. **Run the Streamlit app:**
+   ```bash
+   streamlit run app.py
+   ```
 
-Start the Streamlit app:
+---
 
+## 🚀 Deployment (GitHub Actions)
+
+A ready-to-use GitHub Actions workflow is provided at `.github/workflows/deploy.yml`. On push to `main`, it will:
+
+- Set up Python and dependencies
+- Start Qdrant in Docker
+- Run your Streamlit app
+
+### Required Secrets
+
+Set these secrets in your GitHub repository (Settings → Secrets and variables → Actions):
+
+- `LLM_API_KEY`
+- `SEARCH_API_KEY`
+- `VECTOR_DB_URL`
+- `VECTOR_DB_PORT`
+- `VECTOR_DB_COLLECTION`
+- `DB_CONNECTION_STRING`
+- `DEBUG`
+- `LOG_LEVEL`
+
+(Reference your `.env.sample` for any additional secrets your app may require.)
+
+---
+
+## 📝 Environment Variables
+
+See `env.sample` for all required environment variables:
+
+- `LLM_API_KEY`
+- `VECTOR_DB_URL`
+- `VECTOR_DB_PORT`
+- `VECTOR_DB_COLLECTION`
+- `SEARCH_API_KEY`
+- `DB_CONNECTION_STRING`
+- `DEBUG`
+- `LOG_LEVEL`
+
+---
+
+## 🧪 Testing
+
+To run tests:
 ```bash
-streamlit run app.py
+pytest
 ```
 
 ## 📁 Project Structure
